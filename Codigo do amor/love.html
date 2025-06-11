@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eu Te Amo ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            height: 100vh;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .love-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff69b4;
+            text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493, 0 0 60px #ff1493;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out;
+            pointer-events: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .heart {
+            position: fixed;
+            color: #ff69b4;
+            font-size: 2rem;
+            z-index: 5;
+            pointer-events: none;
+            animation: floatUp 4s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) rotate(360deg);
+            }
+        }
+
+        .title {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff69b4;
+            font-size: 2rem;
+            text-shadow: 0 0 10px #ff69b4;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 20px #ff69b4, 0 0 30px #ff1493;
+            }
+        }
+
+        .instruction {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff69b4;
+            font-size: 1.2rem;
+            z-index: 10;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0.3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .love-message {
+                font-size: 2rem;
+                white-space: normal;
+                max-width: 90%;
+            }
+            
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .instruction {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div class="title">Codigo do Amor</div>
+    <div class="instruction">Clique na tela para uma surpresa!</div>
+
+    <script>
+        // Canvas Matrix Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const loveWords = ['EU TE AMO', 'AMOR', 'LOVE', 'PAIXAO', 'CARINHO', 'TERNURA'];
+        const columns = Math.floor(canvas.width / 40);
+        const drops = [];
+
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * canvas.height / 30);
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(255, 105, 180, 0.6)';
+            ctx.font = '16px Courier New';
+
+            for (let i = 0; i < drops.length; i++) {
+                if (Math.random() > 0.4) {
+                    const text = loveWords[Math.floor(Math.random() * loveWords.length)];
+                    ctx.fillText(text, i * 40, drops[i] * 30);
+                }
+
+                if (drops[i] * 30 > canvas.height && Math.random() > 0.95) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 80);
+
+        // Click effect
+        let messageCount = 0;
+        const loveMessages = [
+            'EU TE AMO MUITO!',
+            'VOCE E TUDO PRA MIM!',
+            'MEU CORACAO E SEU!',
+            'TE AMO INFINITAMENTE!',
+            'VOCE E MINHA VIDA!',
+            'AMOR ETERNO!',
+            'PARA SEMPRE JUNTOS!',
+            'MEU GRANDE AMOR!'
+        ];
+
+        document.addEventListener('click', function(e) {
+            // Create love message
+            const message = document.createElement('div');
+            message.className = 'love-message';
+            message.textContent = loveMessages[messageCount % loveMessages.length];
+            document.body.appendChild(message);
+
+            // Create hearts around click
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = 'AMOR';
+                    heart.style.left = (e.clientX + (Math.random() - 0.5) * 100) + 'px';
+                    heart.style.top = (e.clientY + (Math.random() - 0.5) * 100) + 'px';
+                    document.body.appendChild(heart);
+
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 4000);
+                }, i * 120);
+            }
+
+            // Remove message after animation
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+
+            messageCount++;
+        });
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Add some floating hearts periodically
+        setInterval(() => {
+            if (Math.random() > 0.5) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = ['AMOR', 'CARINHO', 'PAIXAO'][Math.floor(Math.random() * 3)];
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+                heart.style.top = window.innerHeight + 'px';
+                heart.style.animation = 'floatUp 6s ease-out forwards';
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }
+        }, 4000);
+    </script>
+</body>
+</html>
